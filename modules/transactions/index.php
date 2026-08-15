@@ -46,13 +46,13 @@ if (($_GET['export'] ?? '') === 'csv') {
             'TXN-' . str_pad((string) $tx['id'], 6, '0', STR_PAD_LEFT),
             format_date($tx['transaction_date']),
             $tx['person_name'] ?? t('general_expense'),
-            $tx['transaction_type'],
+            t(strtolower(str_replace(' ', '_', $tx['transaction_type']))),
             $tx['amount'],
-            $tx['payment_method'],
+            t(strtolower(str_replace(' ', '_', $tx['payment_method']))),
             $tx['description'],
         ];
     }
-    output_csv('transactions.csv', [t('transaction_type'), t('transaction_date'), t('name'), t('transaction_type'), t('amount'), t('payment_method'), t('description')], $rows);
+    output_csv('transactions.csv', [t('reference'), t('transaction_date'), t('name'), t('transaction_type'), t('amount'), t('payment_method'), t('description')], $rows);
 }
 
 $persons = fetch_all("SELECT id, name, person_type FROM persons WHERE is_deleted = 0 AND status = 'Active' ORDER BY name");
@@ -176,7 +176,7 @@ include __DIR__ . '/../../includes/header.php';
             </div>
             <div class="col-6 mb-2">
                 <label class="form-label"><?= e(t('amount')) ?></label>
-                <input type="number" step="0.01" name="amount" id="tf_amount" class="form-control" required min="0.01">
+                <input type="number" step="0.01" name="amount" id="tf_amount" class="form-control" required min="0.01" data-words-target="#tf_words">
             </div>
         </div>
         <div class="alert alert-light border small py-2" id="tf_words"></div>
@@ -221,6 +221,8 @@ function openTxnModal(tx) {
     document.getElementById('tf_date').value = tx ? tx.transaction_date : new Date().toISOString().slice(0,10);
     document.getElementById('tf_method').value = tx ? tx.payment_method : 'Cash';
     document.getElementById('tf_desc').value = tx ? (tx.description || '') : '';
+    var amountInput = document.getElementById('tf_amount');
+    if (amountInput) amountInput.dispatchEvent(new Event('input'));
     bootstrap.Modal.getOrCreateInstance(document.getElementById('txnModal')).show();
 }
 " . ($auto_open ? "document.addEventListener('DOMContentLoaded', function(){ openTxnModal(); });" : '') . "

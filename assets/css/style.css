@@ -52,6 +52,24 @@ body {
 
 .app-sidebar-brand i { color: #7fd7a8; }
 
+.app-logo {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+    object-fit: contain;
+}
+
+.login-brand .app-logo {
+    width: 64px;
+    height: 64px;
+}
+
+.app-logo-lg {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 6px;
+}
+
 .app-sidebar-nav {
     flex: 1;
     padding: 14px 10px;

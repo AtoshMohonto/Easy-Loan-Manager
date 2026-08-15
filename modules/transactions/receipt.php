@@ -29,6 +29,7 @@ $words = $CURRENT_LANG === 'bn' ? $tx['amount_words_bn'] : $tx['amount_words_en'
 <body>
 <div class="print-sheet">
     <div class="text-center mb-4">
+        <img class="app-logo app-logo-lg" src="<?= BASE_URL ?>assets/img/logo.svg" alt="<?= e(t('app_name')) ?>">
         <h3 class="mb-0"><?= e($settings['company_name'] ?? t('app_name')) ?></h3>
         <p class="text-muted mb-0"><?= e(t('receipt')) ?> — TXN-<?= str_pad((string) $tx['id'], 6, '0', STR_PAD_LEFT) ?></p>
     </div>
@@ -71,7 +72,7 @@ $words = $CURRENT_LANG === 'bn' ? $tx['amount_words_bn'] : $tx['amount_words_en'
         </div>
         <div class="col-6 text-center">
             <div style="border-top:1px solid #999; width:80%; margin:0 auto;"></div>
-            <small class="text-muted">Authorized Signature</small>
+            <small class="text-muted"><?= e(t('authorized_signature')) ?></small>
         </div>
     </div>
 

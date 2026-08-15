@@ -10,7 +10,7 @@ define('DB_USER', 'root');
 define('DB_PASS', '');
 
 // Application settings
-define('APP_NAME', 'Easy Loan Manager');
+define('APP_NAME', 'EasyLoan');
 define('BASE_URL', '/Easy-Loan-Manager/');
 define('ROOT_PATH', dirname(__DIR__));
 
@@ -44,6 +44,7 @@ function db(): PDO
 $allowed_langs = ['en', 'bn'];
 if (isset($_GET['lang']) && in_array($_GET['lang'], $allowed_langs, true)) {
     $_SESSION['lang'] = $_GET['lang'];
+    $_SESSION['lang_explicit'] = true;
 }
 $CURRENT_LANG = $_SESSION['lang'] ?? 'en';
 $LANG = require ROOT_PATH . '/lang/' . $CURRENT_LANG . '.php';

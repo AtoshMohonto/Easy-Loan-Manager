@@ -10,6 +10,17 @@ function t(string $key): string
     return $LANG[$key] ?? $key;
 }
 
+/**
+ * Builds a language-switch URL that preserves the current page's other
+ * query parameters (filters, ids, redirect target, etc.).
+ */
+function lang_switch_url(string $lang): string
+{
+    $params = $_GET;
+    $params['lang'] = $lang;
+    return '?' . http_build_query($params);
+}
+
 // --- CSRF --------------------------------------------------------------------
 function csrf_token(): string
 {

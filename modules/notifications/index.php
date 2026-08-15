@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($title !== '' && $message !== '') {
             notify(null, $title, $message, 'system');
         }
-        redirect(BASE_URL . 'modules/notifications/index.php', t('transaction_saved'));
+        redirect(BASE_URL . 'modules/notifications/index.php', t('broadcast_sent'));
     }
 }
 

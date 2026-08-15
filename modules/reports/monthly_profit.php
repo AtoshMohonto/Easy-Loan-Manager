@@ -17,7 +17,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         );
         log_activity('update_monthly_note', 'monthly_profit_notes', 0, $year_month);
     }
-    redirect(BASE_URL . 'modules/reports/monthly_profit.php?year=' . substr($year_month, 0, 4));
+    $loc = ($_POST['location_id'] ?? '') !== '' ? (int) $_POST['location_id'] : null;
+    $back = BASE_URL . 'modules/reports/monthly_profit.php?year=' . substr($year_month, 0, 4);
+    if ($loc) {
+        $back .= '&location_id=' . $loc;
+    }
+    redirect($back);
 }
 
 $page_title = t('monthly_profit_management');
@@ -133,6 +138,7 @@ include __DIR__ . '/../../includes/header.php';
     <form class="modal-content" method="post">
       <?= csrf_field() ?>
       <input type="hidden" name="year_month" id="nf_ym">
+      <input type="hidden" name="location_id" value="<?= e((string) $location_id) ?>">
       <div class="modal-header">
         <h5 class="modal-title" id="nf_title"></h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>

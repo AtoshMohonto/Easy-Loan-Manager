@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['full_name'] = $user['full_name'];
         $_SESSION['username'] = $user['username'];
         $_SESSION['role'] = $user['role'];
-        if (!empty($user['preferred_lang'])) {
+        if (!empty($user['preferred_lang']) && empty($_SESSION['lang_explicit'])) {
             $_SESSION['lang'] = $user['preferred_lang'];
         }
         execute('UPDATE users SET last_login = NOW() WHERE id = ?', [$user['id']]);
@@ -52,15 +52,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="login-shell">
     <div class="login-card">
         <div class="login-brand">
-            <i class="fa-solid fa-sack-dollar"></i>
+            <img class="app-logo" src="<?= BASE_URL ?>assets/img/logo.svg" alt="<?= e(t('app_name')) ?>">
             <h4 class="mt-2 mb-0"><?= e(t('app_name')) ?></h4>
             <p class="text-muted small mb-0"><?= e(t('login_title')) ?></p>
         </div>
 
         <div class="text-end mb-3">
-            <a href="?lang=en" class="small <?= $CURRENT_LANG === 'en' ? 'fw-bold' : 'text-muted' ?>">EN</a>
+            <a href="<?= e(lang_switch_url('en')) ?>" class="small <?= $CURRENT_LANG === 'en' ? 'fw-bold' : 'text-muted' ?>">EN</a>
             &nbsp;/&nbsp;
-            <a href="?lang=bn" class="small <?= $CURRENT_LANG === 'bn' ? 'fw-bold' : 'text-muted' ?>">বাংলা</a>
+            <a href="<?= e(lang_switch_url('bn')) ?>" class="small <?= $CURRENT_LANG === 'bn' ? 'fw-bold' : 'text-muted' ?>">বাংলা</a>
         </div>
 
         <?php if ($error): ?>

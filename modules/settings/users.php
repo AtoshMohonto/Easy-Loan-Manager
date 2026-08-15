@@ -9,11 +9,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($action === 'delete') {
         if ($id === current_user_id()) {
-            redirect(BASE_URL . 'modules/settings/users.php', 'You cannot delete your own account.', 'danger');
+            redirect(BASE_URL . 'modules/settings/users.php', t('cannot_delete_own_account'), 'danger');
         }
         execute('UPDATE users SET is_deleted = 1 WHERE id = ?', [$id]);
         log_activity('delete_user', 'user', $id);
-        redirect(BASE_URL . 'modules/settings/users.php', t('person_deleted'));
+        redirect(BASE_URL . 'modules/settings/users.php', t('user_deleted'));
     }
 
     $full_name = trim($_POST['full_name'] ?? '');
@@ -24,12 +24,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = (string) ($_POST['password'] ?? '');
 
     if ($full_name === '' || $username === '') {
-        redirect(BASE_URL . 'modules/settings/users.php', 'Full name and username are required.', 'danger');
+        redirect(BASE_URL . 'modules/settings/users.php', t('user_fields_required'), 'danger');
     }
 
     $dupe = fetch_one('SELECT id FROM users WHERE username = ? AND id != ? AND is_deleted = 0', [$username, $id]);
     if ($dupe) {
-        redirect(BASE_URL . 'modules/settings/users.php', 'Username already taken.', 'danger');
+        redirect(BASE_URL . 'modules/settings/users.php', t('username_taken'), 'danger');
     }
 
     if ($id > 0) {
@@ -43,13 +43,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         log_activity('update_user', 'user', $id, $username);
     } else {
         if ($password === '') {
-            redirect(BASE_URL . 'modules/settings/users.php', 'Password is required for a new user.', 'danger');
+            redirect(BASE_URL . 'modules/settings/users.php', t('password_required'), 'danger');
         }
         execute('INSERT INTO users (full_name, username, email, password, role, status) VALUES (?, ?, ?, ?, ?, ?)',
             [$full_name, $username, $email, password_hash($password, PASSWORD_DEFAULT), $role, $status]);
         log_activity('create_user', 'user', (int) db()->lastInsertId(), $username);
     }
-    redirect(BASE_URL . 'modules/settings/users.php', t('person_saved'));
+    redirect(BASE_URL . 'modules/settings/users.php', t('user_saved'));
 }
 
 $page_title = t('users');

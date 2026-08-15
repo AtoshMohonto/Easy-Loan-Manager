@@ -10,16 +10,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($action === 'delete') {
         $inUse = fetch_one('SELECT COUNT(*) AS c FROM persons WHERE location_id = ? AND is_deleted = 0', [$id]);
         if (($inUse['c'] ?? 0) > 0) {
-            redirect(BASE_URL . 'modules/locations/index.php', 'Cannot delete: location is assigned to one or more persons.', 'danger');
+            redirect(BASE_URL . 'modules/locations/index.php', t('location_in_use'), 'danger');
         }
         execute('UPDATE locations SET is_deleted = 1 WHERE id = ?', [$id]);
         log_activity('delete_location', 'location', $id);
-        redirect(BASE_URL . 'modules/locations/index.php', t('person_deleted'));
+        redirect(BASE_URL . 'modules/locations/index.php', t('location_deleted'));
     }
 
     $name = trim($_POST['name'] ?? '');
     if ($name === '') {
-        redirect(BASE_URL . 'modules/locations/index.php', 'Name is required.', 'danger');
+        redirect(BASE_URL . 'modules/locations/index.php', t('name_required'), 'danger');
     }
 
     if ($id > 0) {
@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         execute('INSERT INTO locations (name) VALUES (?)', [$name]);
         log_activity('create_location', 'location', (int) db()->lastInsertId(), $name);
     }
-    redirect(BASE_URL . 'modules/locations/index.php', t('person_saved'));
+    redirect(BASE_URL . 'modules/locations/index.php', t('location_saved'));
 }
 
 $page_title = t('locations');

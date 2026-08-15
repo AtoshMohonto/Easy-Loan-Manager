@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($new_password !== $confirm_password) {
         $error = t('password_mismatch');
     } elseif (strlen($new_password) < 6) {
-        $error = 'New password must be at least 6 characters.';
+        $error = t('password_too_short');
     } else {
         execute('UPDATE users SET password = ? WHERE id = ?', [password_hash($new_password, PASSWORD_DEFAULT), current_user_id()]);
         log_activity('change_password', 'user', (int) current_user_id());

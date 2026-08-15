@@ -27,7 +27,7 @@ $status = in_array($_POST['status'] ?? '', ['Active', 'Inactive'], true) ? $_POS
 $notes = trim($_POST['notes'] ?? '');
 
 if ($name === '') {
-    redirect(BASE_URL . 'modules/persons/index.php', 'Name is required.', 'danger');
+    redirect(BASE_URL . 'modules/persons/index.php', t('name_required'), 'danger');
 }
 
 if ($id > 0) {

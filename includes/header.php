@@ -35,8 +35,8 @@ $unread_count = is_logged_in() ? unread_notification_count((int) current_user_id
                         <i class="fa-solid fa-globe"></i> <?= $CURRENT_LANG === 'bn' ? t('bangla') : t('english') ?>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="?lang=en"><?= e(t('english')) ?></a></li>
-                        <li><a class="dropdown-item" href="?lang=bn"><?= e(t('bangla')) ?></a></li>
+                        <li><a class="dropdown-item" href="<?= e(lang_switch_url('en')) ?>"><?= e(t('english')) ?></a></li>
+                        <li><a class="dropdown-item" href="<?= e(lang_switch_url('bn')) ?>"><?= e(t('bangla')) ?></a></li>
                     </ul>
                 </div>
 

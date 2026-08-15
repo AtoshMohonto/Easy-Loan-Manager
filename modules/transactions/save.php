@@ -6,6 +6,13 @@ require_csrf();
 $action = $_POST['action'] ?? 'save';
 $id = (int) ($_POST['id'] ?? 0);
 
+// Optional return URL so in-app flows (e.g. Area Analytics) can redirect
+// the user back to the page they came from after saving.
+$redirectTo = $_POST['redirect'] ?? '';
+$target = ($redirectTo !== '' && str_starts_with($redirectTo, BASE_URL))
+    ? $redirectTo
+    : BASE_URL . 'modules/transactions/index.php';
+
 if ($action === 'delete') {
     require_role([ROLE_ADMIN]);
     $tx = fetch_one('SELECT person_id FROM transactions WHERE id = ?', [$id]);
@@ -14,7 +21,7 @@ if ($action === 'delete') {
         recalc_person_balance((int) $tx['person_id']);
     }
     log_activity('delete_transaction', 'transaction', $id);
-    redirect(BASE_URL . 'modules/transactions/index.php', t('transaction_deleted'));
+    redirect($target, t('transaction_deleted'));
 }
 
 require_role([ROLE_ADMIN, ROLE_MANAGER]);
@@ -30,10 +37,10 @@ $description = trim($_POST['description'] ?? '');
 $person_id = ($_POST['person_id'] ?? '') !== '' ? (int) $_POST['person_id'] : null;
 
 if ($amount <= 0 && $transaction_type !== 'Adjustment') {
-    redirect(BASE_URL . 'modules/transactions/index.php', 'Amount must be greater than zero.', 'danger');
+    redirect($target, t('amount_required'), 'danger');
 }
 if ($transaction_type !== 'Expense' && !$person_id) {
-    redirect(BASE_URL . 'modules/transactions/index.php', 'A person is required for this transaction type.', 'danger');
+    redirect($target, t('person_required'), 'danger');
 }
 
 $words_en = number_to_words_en(abs($amount));
@@ -66,7 +73,7 @@ try {
     $pdo->commit();
 } catch (Throwable $e) {
     $pdo->rollBack();
-    redirect(BASE_URL . 'modules/transactions/index.php', 'Failed to save transaction.', 'danger');
+    redirect($target, t('transaction_failed'), 'danger');
 }
 
 if ($old_person_id && $old_person_id != $person_id) {
@@ -81,4 +88,5 @@ if ($person_id) {
     }
 }
 
-redirect(BASE_URL . 'modules/transactions/index.php', t('transaction_saved'));
+$successMsg = !empty($_POST['mark_payment']) ? t('payment_success') : t('transaction_saved');
+redirect($target, $successMsg);

@@ -119,11 +119,48 @@ CREATE TABLE IF NOT EXISTS `activity_logs` (
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
+-- institution_loans (loans taken from banks / financial institutions)
+-- ---------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `institution_loans` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `institution_name` VARCHAR(150) NOT NULL,
+  `loan_amount` DECIMAL(15,2) NOT NULL DEFAULT 0.00,
+  `interest_rate` DECIMAL(5,2) DEFAULT NULL,
+  `taken_date` DATE NOT NULL,
+  `due_date` DATE DEFAULT NULL,
+  `status` ENUM('Active','Closed') NOT NULL DEFAULT 'Active',
+  `notes` TEXT DEFAULT NULL,
+  `created_by` INT DEFAULT NULL,
+  `is_deleted` TINYINT(1) NOT NULL DEFAULT 0,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (`created_by`) REFERENCES `users`(`id`) ON DELETE SET NULL
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------------------
+-- institution_payments (principal / interest paid back to institutions)
+-- ---------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `institution_payments` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `institution_loan_id` INT NOT NULL,
+  `amount` DECIMAL(15,2) NOT NULL,
+  `payment_type` ENUM('Principal','Interest') NOT NULL DEFAULT 'Principal',
+  `payment_date` DATE NOT NULL,
+  `payment_method` ENUM('Cash','Bank','Mobile Banking','Cheque','Other') NOT NULL DEFAULT 'Cash',
+  `description` TEXT DEFAULT NULL,
+  `created_by` INT NOT NULL,
+  `is_deleted` TINYINT(1) NOT NULL DEFAULT 0,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (`institution_loan_id`) REFERENCES `institution_loans`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`created_by`) REFERENCES `users`(`id`)
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------------------
 -- settings (single row)
 -- ---------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `settings` (
   `id` INT PRIMARY KEY DEFAULT 1,
-  `company_name` VARCHAR(200) NOT NULL DEFAULT 'Easy Loan Manager',
+  `company_name` VARCHAR(200) NOT NULL DEFAULT 'EasyLoan',
   `currency_symbol` VARCHAR(5) NOT NULL DEFAULT '৳',
   `default_lang` ENUM('en','bn') NOT NULL DEFAULT 'en',
   `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -134,7 +171,7 @@ CREATE TABLE IF NOT EXISTS `settings` (
 -- =======================================================================
 
 INSERT INTO `settings` (`id`, `company_name`, `currency_symbol`, `default_lang`)
-VALUES (1, 'Easy Loan Manager', '৳', 'en')
+VALUES (1, 'EasyLoan', '৳', 'en')
 ON DUPLICATE KEY UPDATE `id` = `id`;
 
 -- Passwords: admin123 / manager123 / viewer123 (bcrypt hashes below)

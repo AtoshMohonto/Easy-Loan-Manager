@@ -7,7 +7,7 @@ function nav_active(string $key, string $active): string
 ?>
 <aside class="app-sidebar no-print" id="appSidebar">
     <div class="app-sidebar-brand">
-        <i class="fa-solid fa-sack-dollar"></i>
+        <img class="app-logo" src="<?= BASE_URL ?>assets/img/logo.svg" alt="<?= e(t('app_name')) ?>">
         <span><?= e(t('app_name')) ?></span>
     </div>
     <nav class="app-sidebar-nav">
@@ -19,6 +19,12 @@ function nav_active(string $key, string $active): string
         </a>
         <a class="<?= nav_active('transactions', $active_page) ?>" href="<?= BASE_URL ?>modules/transactions/index.php">
             <i class="fa-solid fa-right-left"></i> <span><?= e(t('transactions')) ?></span>
+        </a>
+        <a class="<?= nav_active('areas', $active_page) ?>" href="<?= BASE_URL ?>modules/areas/index.php">
+            <i class="fa-solid fa-map-location-dot"></i> <span><?= e(t('areas')) ?></span>
+        </a>
+        <a class="<?= nav_active('finance', $active_page) ?>" href="<?= BASE_URL ?>modules/finance/index.php">
+            <i class="fa-solid fa-building-columns"></i> <span><?= e(t('finance')) ?></span>
         </a>
         <a class="<?= nav_active('reports', $active_page) ?>" href="<?= BASE_URL ?>modules/reports/monthly_profit.php">
             <i class="fa-solid fa-chart-line"></i> <span><?= e(t('reports')) ?></span>
