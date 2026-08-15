@@ -1,0 +1,11 @@
+RewriteEngine On
+
+<FilesMatch "^config\.php$">
+    Require all denied
+</FilesMatch>
+
+<IfModule mod_dir.c>
+    DirectoryIndex index.php
+</IfModule>
+
+Options -Indexes
