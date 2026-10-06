@@ -11,7 +11,7 @@ define('DB_PASS', '');
 
 // Application settings
 define('APP_NAME', 'EasyLoan');
-define('BASE_URL', '/Easy-Loan-Manager/');
+define('BASE_URL', '/Finance/Easy-Loan-Manager/');
 define('ROOT_PATH', dirname(__DIR__));
 
 // Roles
